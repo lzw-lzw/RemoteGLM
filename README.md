@@ -23,9 +23,16 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 |:-|:-|:-|
 |Sydney_captions|613张图片，每张5句描述|![](images/sydney_example.jpg)|
 |UCM_captions|2100张图片，每张5句描述|![](images/ucm_example.jpg)|
+
 ## 使用方法
 
 ### 环境配置
+使用pip安装依赖
+```bash
+pip install -r requirements.txt
+# 国内使用镜像安装依赖
+pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+```
 
 ### 模型推理
 
