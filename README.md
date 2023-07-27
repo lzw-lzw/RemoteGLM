@@ -33,11 +33,51 @@ pip install -r requirements.txt
 # 国内使用镜像安装依赖
 pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
 ```
+此时默认会安装deepspeed库（支持sat库训练），此库对于模型推理并非必要，同时部分Windows环境安装此库时会遇到问题。 如果想绕过deepspeed安装，我们可以将命令改为
+```bash
+pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements_wo_ds.txt
+pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-deps "SwissArmyTransformer>=0.3.6"
+```
 
 ### 模型推理
+|训练权重|下载链接|微调方法|
+|:-|:-|:-|
+|checkpoints-XrayGLM-300|  |LoRA|
+|checkpoints-XrayGLM-1500|  |LoRA|
 
-### 模型训练
+命令行推理
+```python
+python cli_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
+```
+网页gradio运行
+```python
+python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
+```
 
+### 模型复现
+#### 数据集准备
+可以使用如下链接直接下载使用：UCM、Sydney
+
+由于时间问题，我没有对中文图像文本对进行筛选，因此一些数据仍存在描述重复等问题，因此也可以自行生成数据，执行如下命令即可：
+```python
+#可以修改代码中的line12 prompt来自适应生成需要的文本
+python translation_en2zh.py
+```
 ## 问题及改进方向
+1.由于遥感图像领域缺少大规模、高精度、精细描述的图文数据集，基于UCM_captions等生成的中文数据集质量较低，仍存在大量重复描述，或者图片描述较短，总体来说质量较低。这需要进一步探索更高质量遥感图文数据集，另一种可行方向是在此前生成的数据集上进一步利用chatgpt进行扩写或改写，提高数据集的质量。
+
+2.该项目只是对基于微调的遥感图像大模型的初步探索，结果仍存在不少问题。该项目使用Visual-6B作为基座模型，今后可能在更大的模型上进行训练。
 
 ## 致谢
+1.该项目基于[VisualGLM-6B](https://github.com/THUDM/VisualGLM-6B)进行微调。
+
+2.该项目参照了[XrayGLM](https://github.com/WangRongsheng/XrayGLM)的思路准备数据集。
+
+3.该项目利用chatgpt生成中文数据集。
+
+
+
+
+
+
+
