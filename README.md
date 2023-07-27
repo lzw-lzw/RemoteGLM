@@ -16,6 +16,7 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 |:-|:-|:-|
 |![](images/RSICD_00005.jpg) | 这是一张城市地图的卫星照片。图片显示了一个繁忙的十字路口，周围是几栋公寓楼和一条街道。道路两侧有许多汽车停泊，远处还有一座大型建筑物。天空晴朗，云朵漂浮在天空中。 | 这是一张遥感图片，展示了一条道路两旁有许多住宅区。道路中央有一条横穿马路的十字路口，两侧有多条车道。住宅区内有一些房屋整齐排列，道路尽头有一个大型公园。|
 | | |
+
 ## 方法
 
 ## 数据集
@@ -30,8 +31,8 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 
 *Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
 实验中使用Sydney_captions和UCM_captions两个数据集进行初步验证，分别对应json文件为data文件夹下的[Sydney-zh-prompt.json](data/Sydney-zh-prompt.json)和[UCM-zh-prompt.json](data/UCM-zh-prompt.json)，同时使用两个数据集进行训练时对应的文件为[SydneyUCM-zh-prompt.json](data/SydneyUCM-zh-prompt.json).
-## 使用方法
 
+## 使用方法
 ### 环境配置
 使用pip安装依赖
 ```bash
@@ -45,26 +46,27 @@ pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements_wo_ds.txt
 pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-deps "SwissArmyTransformer>=0.3.6"
 ```
 
-### 模型推理
+### 权重下载
 |训练权重|下载链接|微调方法|
 |:-|:-|:-|
 |checkpoints-XrayGLM-300|  |LoRA|
 |checkpoints-XrayGLM-1500|  |LoRA|
 
-#### 下载数据
-下载数据后
-#### 命令行推理
+### 命令行推理
 ```python
 python cli_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 ```
-#### 网页gradio运行
+### 网页gradio运行
 ```python
 python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 ```
 此时可通过`http://127.0.0.1:7860`在线进行测试。
 
-### 模型复现
-#### 中文数据集准备
+## 模型复现
+### 数据集下载
+按照上面给出的链接下载Sydney_captions和UCM_captions数据集，将数据集中的图片放到train_images文件夹下。
+
+### 中文数据集准备
 <details><summary><b>下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值，每张图片包括分散的5个描述。<b></summary>
 
 ```json
