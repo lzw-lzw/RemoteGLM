@@ -1,7 +1,7 @@
 # RemoteGLM
 用于遥感图像场景分析的中文多模态大模型 | Chinese multimodal large-scale model for remote sensing image scene analysis
 <p align="center" width="100%">
-<img src="images/logo.jpeg" alt="Stanford-Alpaca" style="width: 50%; min-width: 300px; display: block; margin: auto;">
+<img src="images/logo.jpeg" alt="RemoteGLM" width = "300" height = "300"">
 </p>
 
 ## 介绍
