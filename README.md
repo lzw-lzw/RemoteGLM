@@ -26,7 +26,9 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 |:-|:-|:-|
 |Sydney_captions|613张图片，每张5句描述|![](images/sydney_example.jpg)|
 |UCM_captions|2100张图片，每张5句描述|![](images/ucm_example.jpg)|
+|RSICD|10921张图片，每张5句描述|![](images/rsicd_example.bmp)|
 
+*Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
 ## 使用方法
 
 ### 环境配置
