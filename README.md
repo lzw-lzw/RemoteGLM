@@ -1,5 +1,5 @@
 # RemoteGLM
-用于遥感图像场景分析的中文多模态大模型 | Chinese multimodal large-scale model for remote sensing image scene analysis
+**用于遥感图像场景分析的中文多模态大模型 | Chinese multimodal large-scale model for remote sensing image scene analysis**
 <p align="center" width="100%">
 <img src="images/logo.jpeg" alt="RemoteGLM" width = "300" height = "300"">
 </p>
@@ -12,9 +12,9 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 因此，RemoteGLM模型基于VisualGLM-6B，在遥感图像-中文数据集上进行微调得到，在遥感图像场景分析任务中具有较好的结果。
 
 ## 效果展示
-|遥感图像|VisualGLM|RemoteGLM|
+|遥感图像|VisualGLM-6B|RemoteGLM|
 |:-|:-|:-|
-|![](images/RSICD_00005.jpg)|这是一张城市地图的卫星照片。图片显示了一个繁忙的十字路口，周围是几栋公寓楼和一条街道。道路两侧有许多汽车停泊，远处还有一座大型建筑物。天空晴朗，云朵漂浮在天空中。|这是一张遥感图片，展示了一条道路两旁有许多住宅区。道路中央有一条横穿马路的十字路口，两侧有多条车道。住宅区内有一些房屋整齐排列，道路尽头有一个大型公园。|
+|![](images/RSICD_00005.jpg) | 这是一张城市地图的卫星照片。图片显示了一个繁忙的十字路口，周围是几栋公寓楼和一条街道。道路两侧有许多汽车停泊，远处还有一座大型建筑物。天空晴朗，云朵漂浮在天空中。 | 这是一张遥感图片，展示了一条道路两旁有许多住宅区。道路中央有一条横穿马路的十字路口，两侧有多条车道。住宅区内有一些房屋整齐排列，道路尽头有一个大型公园。|
 | | |
 ## 方法
 
@@ -31,7 +31,136 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 *Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
 
 ## 使用方法
-由于原始数据集中
+### 中文数据集准备
+下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值
+<details><summary><b>每张图片包括分散的5个描述如下:<b></summary>
+  
+```json
+{
+	"images": [{
+		"sentids": [0,
+		1,
+		2,
+		3,
+		4],
+		"imgid": 0,
+		"sentences": [{
+			"tokens": ["A",
+			"residential",
+			"area",
+			"with",
+			"houses",
+			"arranged",
+			"neatly"],
+			"raw": "A residential area with houses arranged neatly .",
+			"imgid": 0,
+			"sentid": 0
+		},
+		{
+			"tokens": ["A",
+			"residential",
+			"area",
+			"with",
+			"houses",
+			"arranged",
+			"neatly",
+			"and",
+			"some",
+			"roads",
+			"go",
+			"through",
+			"this",
+			"area"],
+			"raw": "A residential area with houses arranged neatly and some roads go through this area .",
+			"imgid": 0,
+			"sentid": 1
+		},
+		{
+			"tokens": ["A",
+			"residential",
+			"area",
+			"with",
+			"houses",
+			"arranged",
+			"neatly",
+			"while",
+			"some",
+			"roads",
+			"and",
+			"railways",
+			"go",
+			"through"],
+			"raw": "A residential area with houses arranged neatly while some roads and railways go through .",
+			"imgid": 0,
+			"sentid": 2
+		},
+		{
+			"tokens": ["A",
+			"residential",
+			"area",
+			"with",
+			"houses",
+			"arranged",
+			"neatly",
+			"while",
+			"many",
+			"plants",
+			"on",
+			"the",
+			"roadside"],
+			"raw": "A residential area with houses arranged neatly while many plants on the roadside .",
+			"imgid": 0,
+			"sentid": 3
+		},
+		{
+			"tokens": ["A",
+			"residential",
+			"area",
+			"with",
+			"houses",
+			"arranged",
+			"neatly",
+			"and",
+			"some",
+			"railways",
+			"beside"],
+			"raw": "A residential area with houses arranged neatly and some railways beside .",
+			"imgid": 0,
+			"sentid": 4
+		}],
+		"split": "train",
+		"filename": "1.tif"
+	},
+  ……
+]}
+```
+</details>
+  
+因此先对其进行预处理，将对应每张图片的5个描述拼接，执行如下代码：
+```bash
+cd data
+python data/transform.py
+```
+可得到类似如下格式的json文件：
+
+```bash
+[
+    {
+        "imged_id": "1.tif",
+        "caption": "A residential area with houses arranged neatly .  A residential area with houses arranged neatly and some roads go through this area .  A residential area with houses arranged neatly while some roads and railways go through .  A residential area with houses arranged neatly while many plants on the roadside .  A residential area with houses arranged neatly and some railways beside .  "
+    },
+    ……
+]
+```
+然后利用openai的api对每张图像对应的英文描述翻译为中文文本，考虑到一些重复描述的存在，可以在提供的prompt中进行约束，例如使用prompt“下面的几个句子是几个人描述同一张遥感图像的英文句子，不同句子之间可能有重复或相似的部分，请你根据这些句子，输出描述该遥感图像内容的一段中文文本，要保证结果的通顺简洁，且应该去除了相似或重复的部分，文本以及分句要符合中文习惯”进行翻译。
+```bash
+python translation_en2zh.py
+```
+
+最后，更改json文件中的图像路径，并加入用于送入VisualGLM的prompt“这张遥感图像展现了什么场景？”，生成最终用于微调VisualGLM的文件。
+```bash
+python generate_prompt.py
+```
 ### 环境配置
 使用pip安装依赖
 ```bash
