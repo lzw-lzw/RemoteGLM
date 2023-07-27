@@ -1,5 +1,8 @@
 # RemoteGLM
 用于遥感图像场景分析的中文多模态大模型 | Chinese multimodal large-scale model for remote sensing image scene analysis
+<p align="center" width="100%">
+<img src="images/logo.jpeg" alt="Stanford-Alpaca" style="width: 50%; min-width: 300px; display: block; margin: auto;">
+</p>
 
 ## 介绍
 目前的通用多模态大模型[LLaVA](https://github.com/haotian-liu/LLaVA)、[MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4)等模型，在广泛意义上取得了较好的效果，但这些多模态大模型在细分垂直领域的应用效果相对较差。目前还几乎没有用于遥感图像场景分析的多模态大模型，这在一定程度上受限于遥感图像相关数据集的稀缺，因此基于通用多模态大模型的微调为遥感大模型的研究提供了可能。
