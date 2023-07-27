@@ -31,7 +31,38 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 *Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
 
 ## 使用方法
-### 中文数据集准备
+
+### 环境配置
+使用pip安装依赖
+```bash
+pip install -r requirements.txt
+# 国内使用镜像安装依赖
+pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+```
+此时默认会安装deepspeed库（支持sat库训练），此库对于模型推理并非必要，同时部分Windows环境安装此库时会遇到问题。 如果想绕过deepspeed安装，我们可以将命令改为
+```bash
+pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements_wo_ds.txt
+pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-deps "SwissArmyTransformer>=0.3.6"
+```
+
+### 模型推理
+|训练权重|下载链接|微调方法|
+|:-|:-|:-|
+|checkpoints-XrayGLM-300|  |LoRA|
+|checkpoints-XrayGLM-1500|  |LoRA|
+
+命令行推理
+```python
+python cli_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
+```
+网页gradio运行
+```python
+python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
+```
+此时可通过http://127.0.0.1:7860在线进行测试。
+
+### 模型复现
+#### 中文数据集准备
 下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值
 <details><summary><b>每张图片包括分散的5个描述如下:<b></summary>
   
@@ -161,37 +192,9 @@ python translation_en2zh.py
 ```bash
 python generate_prompt.py
 ```
-### 环境配置
-使用pip安装依赖
-```bash
-pip install -r requirements.txt
-# 国内使用镜像安装依赖
-pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
-```
-此时默认会安装deepspeed库（支持sat库训练），此库对于模型推理并非必要，同时部分Windows环境安装此库时会遇到问题。 如果想绕过deepspeed安装，我们可以将命令改为
-```bash
-pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements_wo_ds.txt
-pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-deps "SwissArmyTransformer>=0.3.6"
-```
 
-### 模型推理
-|训练权重|下载链接|微调方法|
-|:-|:-|:-|
-|checkpoints-XrayGLM-300|  |LoRA|
-|checkpoints-XrayGLM-1500|  |LoRA|
 
-命令行推理
-```python
-python cli_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
-```
-网页gradio运行
-```python
-python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
-```
 
-### 模型复现
-#### 数据集准备
-可以使用如下链接直接下载使用：UCM、Sydney
 
 由于时间问题，我没有对中文图像文本对进行筛选，因此一些数据仍存在描述重复等问题，因此也可以自行生成数据，执行如下命令即可：
 ```python
