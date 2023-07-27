@@ -29,7 +29,7 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 |RSICD|10921张图片，每张5句描述|![](images/rsicd_example.bmp)|[BaiduYun](https://pan.baidu.com/s/1bp71tE3#list/path=%2F) [GoogleDrive](https://drive.google.com/open?id=0B1jt7lJDEXy3aE90cG9YSl9ScUk)|
 
 *Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
-
+实验中使用Sydney_captions和UCM_captions两个数据集进行初步验证，分别对应json文件为data文件夹下的[Sydney-zh-prompt.json](data/Sydney-zh-prompt.json)和[UCM-zh-prompt.json](data/UCM-zh-prompt.json)。
 ## 使用方法
 
 ### 环境配置
@@ -51,21 +51,22 @@ pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-deps "SwissArmyTrans
 |checkpoints-XrayGLM-300|  |LoRA|
 |checkpoints-XrayGLM-1500|  |LoRA|
 
-命令行推理
+#### 下载数据
+下载数据后
+#### 命令行推理
 ```python
 python cli_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 ```
-网页gradio运行
+#### 网页gradio运行
 ```python
 python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 ```
-此时可通过http://127.0.0.1:7860在线进行测试。
+此时可通过`http://127.0.0.1:7860`在线进行测试。
 
 ### 模型复现
 #### 中文数据集准备
-下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值
-<details><summary><b>每张图片包括分散的5个描述如下:<b></summary>
-  
+<details><summary><b>下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值，每张图片包括分散的5个描述。<b></summary>
+
 ```json
 {
 	"images": [{
@@ -183,24 +184,16 @@ python data/transform.py
     ……
 ]
 ```
-然后利用openai的api对每张图像对应的英文描述翻译为中文文本，考虑到一些重复描述的存在，可以在提供的prompt中进行约束，例如使用prompt“下面的几个句子是几个人描述同一张遥感图像的英文句子，不同句子之间可能有重复或相似的部分，请你根据这些句子，输出描述该遥感图像内容的一段中文文本，要保证结果的通顺简洁，且应该去除了相似或重复的部分，文本以及分句要符合中文习惯”进行翻译。
+然后利用openai的api对每张图像对应的英文描述翻译为中文文本，考虑到一些重复描述的存在，可以在提供的prompt中进行约束，代码中使用prompt“下面的几个句子是几个人描述同一张遥感图像的英文句子，不同句子之间可能有重复或相似的部分，请你根据这些句子，输出描述该遥感图像内容的一段中文文本，要保证结果的通顺简洁，且应该去除了相似或重复的部分，文本以及分句要符合中文习惯”进行翻译，也可以自行试验其他prompt，生成风格化的描述：
 ```bash
 python translation_en2zh.py
 ```
 
-最后，更改json文件中的图像路径，并加入用于送入VisualGLM的prompt“这张遥感图像展现了什么场景？”，生成最终用于微调VisualGLM的文件。
+最后，更改json文件中的图像路径，并加入用于送入VisualGLM的prompt“这张遥感图像展现了什么场景？”，生成最终用于微调VisualGLM的文件：
 ```bash
 python generate_prompt.py
 ```
 
-
-
-
-由于时间问题，我没有对中文图像文本对进行筛选，因此一些数据仍存在描述重复等问题，因此也可以自行生成数据，执行如下命令即可：
-```python
-#可以修改代码中的line12 prompt来自适应生成需要的文本
-python translation_en2zh.py
-```
 ## 问题及改进方向
 1.由于遥感图像领域缺少大规模、高精度、精细描述的图文数据集，基于UCM_captions等生成的中文数据集质量较低，仍存在大量重复描述，或者图片描述较短，总体来说质量较低。这需要进一步探索更高质量遥感图文数据集，另一种可行方向是在此前生成的数据集上进一步利用chatgpt进行扩写或改写，提高数据集的质量。
 
