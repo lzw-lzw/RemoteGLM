@@ -29,7 +29,7 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 |RSICD|10921张图片，每张5句描述|![](images/rsicd_example.bmp)|[BaiduYun](https://pan.baidu.com/s/1bp71tE3#list/path=%2F) [GoogleDrive](https://drive.google.com/open?id=0B1jt7lJDEXy3aE90cG9YSl9ScUk)|
 
 *Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
-实验中使用Sydney_captions和UCM_captions两个数据集进行初步验证，分别对应json文件为data文件夹下的[Sydney-zh-prompt.json](data/Sydney-zh-prompt.json)和[UCM-zh-prompt.json](data/UCM-zh-prompt.json)。
+实验中使用Sydney_captions和UCM_captions两个数据集进行初步验证，分别对应json文件为data文件夹下的[Sydney-zh-prompt.json](data/Sydney-zh-prompt.json)和[UCM-zh-prompt.json](data/UCM-zh-prompt.json)，同时使用两个数据集进行训练时对应的文件为[SydneyUCM-zh-prompt.json](data/SydneyUCM-zh-prompt.json).
 ## 使用方法
 
 ### 环境配置
