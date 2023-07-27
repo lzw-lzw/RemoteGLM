@@ -5,11 +5,10 @@
 </p>
 
 ## 介绍
-目前的通用多模态大模型[LLaVA](https://github.com/haotian-liu/LLaVA)、[MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4)等模型，在广泛意义上取得了较好的效果，但这些多模态大模型在细分垂直领域的应用效果相对较差。目前还几乎没有用于遥感图像场景分析的多模态大模型，这在一定程度上受限于遥感图像相关数据集的稀缺，因此基于通用多模态大模型的微调为遥感大模型的研究提供了可能。
+目前的通用多模态大模型包括[LLaVA](https://github.com/haotian-liu/LLaVA)、[MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4)、[InstructBLIP](https://github.com/salesforce/LAVIS/tree/main/projects/instructblip)等，在通用领域的不同任务上均上取得了较好的效果，但这些多模态大模型在垂直领域的应用效果仍有较大提升空间。由于自然图像与遥感图像存在较大域间差距，通用多模态大模型在遥感图像分析中仍存在许多问题，目前还没有用于遥感图像场景分析的多模态大模型，这在一定程度上受限于遥感图像相关数据集的稀缺，然而基于通用多模态大模型的微调为遥感大模型的研究提供了一种可能的思路。
 
-VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的多模态对话语言模型，由语言模型ChatGLM-6B与图像模型BLIP2-Qformer结合得到，整体模型共78亿参数，它能够整合视觉和语言信息，可用来理解图片，解析图片内容，结合模型量化技术，用户可以在消费级的显卡上进行本地部署。
 
-因此，RemoteGLM模型基于VisualGLM-6B，在遥感图像-中文数据集上进行微调得到，在遥感图像场景分析任务中具有较好的结果。
+RemoteGLM模型基于VisualGLM-6B，在遥感图像数据集上进行微调，在遥感图像场景分析中具有较好的结果。VisualGLM-6B 是清华大学开源的，支持图像、中文和英文的多模态对话语言模型，由语言模型ChatGLM-6B与图像模型BLIP2-Qformer结合得到，整体模型共78亿参数，它能够整合视觉和语言信息，可用来理解图片，解析图片内容，结合模型量化技术，用户可以在消费级的显卡上进行本地部署，很适合用于遥感多模态大模型的初步探索。
 
 ## 效果展示
 |遥感图像|VisualGLM-6B|RemoteGLM|
@@ -25,11 +24,12 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 可以使用常见的遥感字幕数据集构建中文遥感图像-文本对，常见数据集的信息如下：
 |数据集|大小|示例|下载链接
 |:-|:-|:-|:-|
-|Sydney_captions|613张图片，每张5句描述|![](images/sydney_example.jpg)|[BaiduYun](https://pan.baidu.com/s/1hujEmcG#list/path=%2F)
-|UCM_captions|2100张图片，每张5句描述|![](images/ucm_example.jpg)|[BaiduYun](https://pan.baidu.com/s/1mjPToHq)
+|Sydney_captions|613张图片，每张5句描述|![](images/sydney_example.bmp)|[BaiduYun](https://pan.baidu.com/s/1hujEmcG#list/path=%2F)
+|UCM_captions|2100张图片，每张5句描述|![](images/ucm_example.bmp)|[BaiduYun](https://pan.baidu.com/s/1mjPToHq)
 |RSICD|10921张图片，每张5句描述|![](images/rsicd_example.bmp)|[BaiduYun](https://pan.baidu.com/s/1bp71tE3#list/path=%2F) [GoogleDrive](https://drive.google.com/open?id=0B1jt7lJDEXy3aE90cG9YSl9ScUk)|
 
 *Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
+
 实验中使用Sydney_captions和UCM_captions两个数据集进行初步验证，分别对应json文件为data文件夹下的[Sydney-zh-prompt.json](data/Sydney-zh-prompt.json)和[UCM-zh-prompt.json](data/UCM-zh-prompt.json)，同时使用两个数据集进行训练时对应的文件为[SydneyUCM-zh-prompt.json](data/SydneyUCM-zh-prompt.json).
 
 ## 使用方法
