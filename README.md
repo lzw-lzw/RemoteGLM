@@ -21,16 +21,17 @@ VisualGLM-6B 是清华大学开源开源的，支持图像、中文和英文的�
 ## 数据集
 一些常见的用于训练遥感视觉语言模型的[数据集](https://github.com/lzw-lzw/awesome-remote-sensing-vision-language-models#dataset)都是英文构建的，无法直接用于中文微调。因此参照[XrayGLM](https://github.com/WangRongsheng/XrayGLM)的方法构建中文数据集。
 
-使用UCM_captions和Sydney_captions两个遥感字幕数据集构建中文遥感图像-文本对，这两个数据集的信息如下：
-|数据集|大小|示例|
-|:-|:-|:-|
-|Sydney_captions|613张图片，每张5句描述|![](images/sydney_example.jpg)|
-|UCM_captions|2100张图片，每张5句描述|![](images/ucm_example.jpg)|
-|RSICD|10921张图片，每张5句描述|![](images/rsicd_example.bmp)|
+可以使用常见的遥感字幕数据集构建中文遥感图像-文本对，常见数据集的信息如下：
+|数据集|大小|示例|下载链接
+|:-|:-|:-|:-|
+|Sydney_captions|613张图片，每张5句描述|![](images/sydney_example.jpg)|[BaiduYun](https://pan.baidu.com/s/1hujEmcG#list/path=%2F)
+|UCM_captions|2100张图片，每张5句描述|![](images/ucm_example.jpg)|[BaiduYun](https://pan.baidu.com/s/1mjPToHq)
+|RSICD|10921张图片，每张5句描述|![](images/rsicd_example.bmp)|[BaiduYun](https://pan.baidu.com/s/1bp71tE3#list/path=%2F) [GoogleDrive](https://drive.google.com/open?id=0B1jt7lJDEXy3aE90cG9YSl9ScUk)|
 
 *Notes:数据集中一些图片描述不足5句，通过随机复制现有的句子扩充到5句。*
-## 使用方法
 
+## 使用方法
+由于原始数据集中
 ### 环境配置
 使用pip安装依赖
 ```bash
