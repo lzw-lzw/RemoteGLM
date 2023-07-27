@@ -17,7 +17,7 @@ RemoteGLM模型基于VisualGLM-6B，在遥感图像数据集上进行微调，�
 | | |
 
 ## 方法
-
+![](images/remoteglm.bmp)
 ## 数据集
 一些常见的用于训练遥感视觉语言模型的[数据集](https://github.com/lzw-lzw/awesome-remote-sensing-vision-language-models#dataset)都是英文构建的，无法直接用于中文微调。因此参照[XrayGLM](https://github.com/WangRongsheng/XrayGLM)的方法构建中文数据集。
 
