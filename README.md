@@ -5,16 +5,14 @@
 </p>
 
 ## 介绍
-目前的通用多模态大模型包括[LLaVA](https://github.com/haotian-liu/LLaVA)、[MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4)、[InstructBLIP](https://github.com/salesforce/LAVIS/tree/main/projects/instructblip)等，在通用领域的不同任务上均上取得了较好的效果，但这些多模态大模型在垂直领域的应用效果仍有较大提升空间。由于自然图像与遥感图像存在较大域间差距，通用多模态大模型在遥感图像分析中仍存在许多问题，目前还没有用于遥感图像场景分析的多模态大模型，这在一定程度上受限于遥感图像相关数据集的稀缺，然而基于通用多模态大模型的微调为遥感大模型的研究提供了一种可能的思路。
+目前的通用多模态大模型如[LLaVA](https://github.com/haotian-liu/LLaVA)、[MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4)、[InstructBLIP](https://github.com/salesforce/LAVIS/tree/main/projects/instructblip)等，在通用领域的不同任务上均上取得了较好的效果，但这些多模态大模型在垂直领域的应用效果仍有较大提升空间。由于自然图像与遥感图像存在较大域间差距，通用多模态大模型在遥感图像分析中仍存在许多问题，目前还没有用于遥感图像场景分析的多模态大模型，这在一定程度上受限于遥感图像相关数据集的稀缺，基于通用多模态大模型的微调为遥感大模型的研究提供了可能。
 
-
-RemoteGLM模型基于VisualGLM-6B，在遥感图像数据集上进行微调，在遥感图像场景分析中具有较好的结果。VisualGLM-6B 是清华大学开源的，支持图像、中文和英文的多模态对话语言模型，由语言模型ChatGLM-6B与图像模型BLIP2-Qformer结合得到，整体模型共78亿参数，它能够整合视觉和语言信息，可用来理解图片，解析图片内容，结合模型量化技术，用户可以在消费级的显卡上进行本地部署，很适合用于遥感多模态大模型的初步探索。
+VisualGLM-6B 是清华大学开源的，支持图像、中文和英文的多模态对话语言模型，由语言模型ChatGLM-6B与图像模型BLIP2-Qformer结合得到，整体模型共78亿参数，它能够整合视觉和语言信息，可用来理解图片，解析图片内容，结合模型量化技术，用户可以在消费级的显卡上进行本地部署，因此将其用于遥感多模态大模型的初步探索。RemoteGLM模型基于VisualGLM-6B，在遥感图像数据集上进行微调，实验证明通过在简单构建的低质量的指令微调数据集上进行微调，可以有效缓解遥感图像分析中的幻觉现象，提升在遥感图像场景分析中的效果。
 
 ## 效果展示
 |遥感图像|VisualGLM-6B|RemoteGLM|
 |:-|:-|:-|
 |<img decoding="async" src="images/RSICD_00005.jpg" width=1000>| 这是一张城市地图的卫星照片。图片显示了一个繁忙的十字路口，周围是几栋公寓楼和一条街道。道路两侧有许多汽车停泊，远处还有一座大型建筑物。天空晴朗，云朵漂浮在天空中。 | 这是一张遥感图片，展示了一条道路两旁有许多住宅区。道路中央有一条横穿马路的十字路口，两侧有多条车道。住宅区内有一些房屋整齐排列，道路尽头有一个大型公园。|
-| | |
 
 ## 方法
 ![](images/remoteglm.bmp)
@@ -49,8 +47,8 @@ pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-deps "SwissArmyTrans
 ### 权重下载
 |训练权重|下载链接|微调方法|
 |:-|:-|:-|
-|checkpoints-XrayGLM-300|  |LoRA|
-|checkpoints-XrayGLM-1500|  |LoRA|
+|checkpoints-XrayGLM-300|to be updated|LoRA|
+|checkpoints-XrayGLM-1500|to be updated|LoRA|
 
 ### 命令行推理
 ```python
@@ -67,8 +65,8 @@ python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 按照上面给出的链接下载Sydney_captions和UCM_captions数据集，将数据集中的图片放到train_images文件夹下。
 
 ### 中文数据集准备
-<details><summary><b>下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值，每张图片包括分散的5个描述。<b></summary>
-
+下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值，每张图片包括分散的5个描述。
+<details><summary>example<b><b></summary>
 ```json
 {
 	"images": [{
@@ -191,25 +189,28 @@ python data/transform.py
 python translation_en2zh.py
 ```
 
-最后，更改json文件中的图像路径，并加入用于送入VisualGLM的prompt“这张遥感图像展现了什么场景？”，生成最终用于微调VisualGLM的文件：
+最后，更改json文件中的图像路径，并加入用于VisualGLM的prompt“这张遥感图像展现了什么场景？”，生成最终用于微调VisualGLM的文件：
 ```bash
 python generate_prompt.py
 ```
+此处选择相同的prompt，后续会给出不同prompt的测试效果。
+
 ### 模型训练
+使用如下代码进行lora微调，可根据配置自行修改bash文件。
 ```bash
 bash fnetune/finetune_lora.sh
 ```
 
 
 ## 问题及改进方向
-1.由于遥感图像领域缺少大规模、高精度、精细描述的图文数据集，基于UCM_captions等生成的中文数据集质量较低，仍存在大量重复描述，或者图片描述较短，总体来说质量较低。这需要进一步探索更高质量遥感图文数据集，另一种可行方向是在此前生成的数据集上进一步利用chatgpt进行扩写或改写，提高数据集的质量。
+1.由于遥感图像领域缺少大规模、高精度、精细描述的图文数据集，利用chatgpt生成的中文数据集质量较低，仍存在大量重复描述，或者图片描述较短，总体来说质量较低。这需要进一步探索更高质量遥感图文数据集，另一种可行方向是在此前生成的数据集上进一步利用chatgpt进行扩写或改写，提高数据集的质量。此外，初步实验中使用了相同的prompt，因此测试时对于不同遥感分析问题没有很好的理解能力，需要进一步构建指令微调数据集。
 
-2.该项目只是对基于微调的遥感图像大模型的初步探索，结果仍存在不少问题。该项目使用Visual-6B作为基座模型，今后可能在更大的模型上进行训练。
+2.该项目只是对遥感图像大模型的初步探索，结果有很大改进空间，今后可能在更大的基座模型上进行微调，或在更大数据集上进行预训练。
 
 ## 致谢
 1.该项目基于[VisualGLM-6B](https://github.com/THUDM/VisualGLM-6B)进行微调。
 
-2.该项目参照了[XrayGLM](https://github.com/WangRongsheng/XrayGLM)的思路准备数据集。
+2.该项目参照了[XrayGLM](https://github.com/WangRongsheng/XrayGLM)的思路准备中文数据集。
 
 3.该项目利用chatgpt生成中文数据集。
 
