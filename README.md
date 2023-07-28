@@ -195,6 +195,11 @@ python translation_en2zh.py
 ```bash
 python generate_prompt.py
 ```
+### 模型训练
+```bash
+bash fnetune/finetune_lora.sh
+```
+
 
 ## 问题及改进方向
 1.由于遥感图像领域缺少大规模、高精度、精细描述的图文数据集，基于UCM_captions等生成的中文数据集质量较低，仍存在大量重复描述，或者图片描述较短，总体来说质量较低。这需要进一步探索更高质量遥感图文数据集，另一种可行方向是在此前生成的数据集上进一步利用chatgpt进行扩写或改写，提高数据集的质量。
