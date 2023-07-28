@@ -47,8 +47,7 @@ pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-deps "SwissArmyTrans
 ### 权重下载
 |训练权重|下载链接|微调方法|
 |:-|:-|:-|
-|checkpoints-XrayGLM-300|to be updated|LoRA|
-|checkpoints-XrayGLM-1500|to be updated|LoRA|
+|checkpoints-RemoteGLM-1500|to be updated|LoRA|
 
 ### 命令行推理
 ```python
