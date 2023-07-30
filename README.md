@@ -73,7 +73,7 @@ python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 ### 中文数据集准备
 下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值，每张图片包括分散的5个描述。
 
-<details><summary>分散描述示例<b><b></summary>
+<details><summary><b>分散描述示例</b></summary>
 	
 ```json
 {
@@ -183,7 +183,7 @@ python data/transform.py
 ```
 可得到整理后的json文件。
 
-<details><summary>整理描述示例<b><b></summary>
+<details><summary><b>整理描述示例</b></summary>
 	
 ```bash
 [
