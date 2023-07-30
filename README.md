@@ -64,13 +64,17 @@ python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 ```
 此时可通过`http://127.0.0.1:7860`在线进行测试。
 
+
+
 ## 模型复现
 ### 数据集下载
-按照上面给出的链接下载Sydney_captions和UCM_captions数据集，将数据集中的图片放到train_images文件夹下。
+按照上面给出的链接下载Sydney_captions和UCM_captions数据集，将数据集中的图片放到该项目文件夹下。
 
 ### 中文数据集准备
 下载的几个数据集中的caption json文件结构较为杂乱，包括许多不需要的键值，每张图片包括分散的5个描述。
-<details><summary>example<b><b></summary>
+
+<details><summary>分散描述示例<b><b></summary>
+	
 ```json
 {
 	"images": [{
@@ -177,8 +181,10 @@ python web_demo.py --from_pretrained checkpoints/checkpoints-remoteGLM-1500
 cd data
 python data/transform.py
 ```
-可得到类似如下格式的json文件：
+可得到整理后的json文件。
 
+<details><summary>整理描述示例<b><b></summary>
+	
 ```bash
 [
     {
@@ -188,23 +194,24 @@ python data/transform.py
     ……
 ]
 ```
-然后利用openai的api对每张图像对应的英文描述翻译为中文文本，考虑到一些重复描述的存在，可以在提供的prompt中进行约束，代码中使用prompt“下面的几个句子是几个人描述同一张遥感图像的英文句子，不同句子之间可能有重复或相似的部分，请你根据这些句子，输出描述该遥感图像内容的一段中文文本，要保证结果的通顺简洁，且应该去除了相似或重复的部分，文本以及分句要符合中文习惯”进行翻译，也可以自行试验其他prompt，生成风格化的描述：
+</details>
+
+然后利用openai的api对每张图像对应的英文描述翻译为中文文本，考虑到一些重复描述的存在，可以在提供的prompt中进行约束，可以自行试验不同prompt，生成风格化的描述：
 ```bash
-python translation_en2zh.py
+python data/translation_en2zh.py
 ```
 
 最后，更改json文件中的图像路径，并加入用于VisualGLM的prompt“这张遥感图像展现了什么场景？”，生成最终用于微调VisualGLM的文件：
 ```bash
-python generate_prompt.py
+python data/generate_prompt.py
 ```
-此处选择相同的prompt，后续会给出不同prompt的测试效果。
+此处选择相同的prompt，后续会测试不同prompt的效果。
 
 ### 模型训练
-使用如下代码进行lora微调，可根据配置自行修改bash文件。
+使用如下代码进行lora微调，可根据要求自行修改配置文件。
 ```bash
-bash fnetune/finetune_lora.sh
+bash finetune_RemoteGLM.sh
 ```
-
 
 ## 问题及改进方向
 1.由于遥感图像领域缺少大规模、高精度、精细描述的图文数据集，利用chatgpt生成的中文数据集质量较低，仍存在大量重复描述，或者图片描述较短，总体来说质量较低。这需要进一步探索更高质量遥感图文数据集，另一种可行方向是在此前生成的数据集上进一步利用chatgpt进行扩写或改写，提高数据集的质量。此外，初步实验中使用了相同的prompt，因此测试时对于不同遥感分析问题没有很好的理解能力，需要进一步构建指令微调数据集。
@@ -217,6 +224,7 @@ bash fnetune/finetune_lora.sh
 2.该项目参照了[XrayGLM](https://github.com/WangRongsheng/XrayGLM)的思路准备中文数据集。
 
 3.该项目利用chatgpt生成中文数据集。
+
 
 
 
